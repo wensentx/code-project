@@ -1,0 +1,37 @@
+services:
+  discord:
+    build: .
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_GUILD=${DISCORD_GUILD}
+    volumes:
+      - ./:/app
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - code-network
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backup:/var/lib/postgresql/backup
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - code-network
+
+volumes:
+  postgres_data:
+  postgres_backup:
+
+
+networks:
+  code-network:
+    driver: bridge
