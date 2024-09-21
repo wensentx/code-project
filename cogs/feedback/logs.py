@@ -7,6 +7,8 @@ import discord
 import pytz
 from discord.ext import commands
 from dotenv import load_dotenv
+from cogs.feedback.database.functions import *
+from cogs.feedback.database.connection import create_tables
 
 load_dotenv()
 DISCORD_GUILD = int(os.getenv('DISCORD_GUILD'))
@@ -31,6 +33,7 @@ class Joiner(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        await create_tables()
         guild_invites = await self.bot.get_guild(DISCORD_GUILD).invites()
         invites = {}
         for invite in guild_invites:
@@ -76,6 +79,10 @@ class Joiner(commands.Cog):
 
         if member.bot is True:
             await member.kick(reason='Боты не допускаются на сервере')
+
+        user = await UserDB().get_or_create_user(member.id)
+        print(user)
+
 
         guild_invites = await member.guild.invites()
         for invite in guild_invites:

@@ -6,5 +6,8 @@
     "LOGS_VOICE_CHANNEL_ID": 0,
     "LOGS_MEMBER_CHANNEL_ID": 0,
     "STAFF_CHANNEL_ID": 0
+  },
+  "skills": {
+    "NEWBIE_ROLE_ID": 0
   }
 }
