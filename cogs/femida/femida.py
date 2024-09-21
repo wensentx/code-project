@@ -175,7 +175,7 @@ class FemidaService(commands.Cog):
                 f'Вас замутил(а) {interaction.user.mention} ({interaction.user}).\n'
             )
             await member.send(message)
-        except discord.Forbidden:
+        except discord.errors.Forbidden:
             pass
         for channel in interaction.guild.text_channels:
             async for c in channel.history(after=datetime.datetime.now() - datetime.timedelta(minutes=5)):
@@ -237,7 +237,7 @@ class FemidaService(commands.Cog):
                 f'Вас предупредил(а) {interaction.user.mention} ({interaction.user}).\n'
             )
             await member.send(message)
-        except:
+        except discord.errors.Forbidden:
             pass
 
     @app_commands.command(name='unmute', description='Размутить пользователя')
@@ -288,7 +288,7 @@ class FemidaService(commands.Cog):
                 f'С вас снял(а) тайм-аут {interaction.user.mention} ({interaction.user}).\n'
             )
             await member.send(message)
-        except discord.Forbidden:
+        except discord.errors.Forbidden:
             pass
 
     @app_commands.command(name='logs', description='Посмотреть логи пользователя')
