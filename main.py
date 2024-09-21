@@ -9,7 +9,7 @@ DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD_ID = discord.Object(id=int(os.getenv('DISCORD_GUILD')))
 
 
-class Moonlit(commands.Bot):
+class Code(commands.Bot):
     def __init__(self):
         super().__init__(
             command_prefix='!',
@@ -33,6 +33,6 @@ class Moonlit(commands.Bot):
                     print(f'Loaded cog: {file[:-3]}')
 
 
-client = Moonlit()
+client = Code()
 if __name__ == "__main__":
     client.run(DISCORD_TOKEN, reconnect=True)
