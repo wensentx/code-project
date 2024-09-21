@@ -6,7 +6,7 @@ from cogs.feedback.database.models import User
 
 class UserDB:
 
-    async def get_or_create_user(self, user_id: int):
+    async def get_or_create_user(self, user_id: int) -> User:
         """
         Get or create user in database
         :param user_id:

@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+from email.policy import default
 
 import aiofiles
 import discord
@@ -81,8 +82,13 @@ class Joiner(commands.Cog):
             await member.kick(reason='Боты не допускаются на сервере')
 
         user = await UserDB().get_or_create_user(member.id)
-        print(user)
+        roles = []
+        if user.is_dumb:
+            newbie_role = member.guild.get_role(self.config['skills']['NEWBIE_ROLE_ID'])
+            roles.append(newbie_role)
 
+        default_role = member.guild.get_role(self.config['skills']['DEFAULT_ROLE_ID'])
+        await member.add_roles(default_role, *roles)
 
         guild_invites = await member.guild.invites()
         for invite in guild_invites:

@@ -8,6 +8,7 @@
     "STAFF_CHANNEL_ID": 0
   },
   "skills": {
+    "DEFAULT_ROLE_ID": 0,
     "NEWBIE_ROLE_ID": 0
   }
 }
