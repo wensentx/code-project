@@ -1,5 +1,10 @@
 {
   "statistic": {
     "CHANNEL_ID": 0
+  },
+  "logs": {
+    "LOGS_VOICE_CHANNEL_ID": 0,
+    "LOGS_MEMBER_CHANNEL_ID": 0,
+    "STAFF_CHANNEL_ID": 0
   }
 }
