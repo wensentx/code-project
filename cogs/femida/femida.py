@@ -1,6 +1,7 @@
 import datetime
 import re
-
+import json
+import aiofiles
 import discord
 import pytz
 from discord import app_commands
@@ -100,6 +101,17 @@ async def get_embeds_logs(interaction, member):
 class FemidaService(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.config = None
+        self.bot.loop.create_task(self.load_config())
+
+    async def load_config(self):
+        async with aiofiles.open('cogs/femida/config.json', 'r', encoding='utf-8') as f:
+            content = await f.read()
+            self.config = json.loads(content)
+
+    async def save_config(self):
+        async with aiofiles.open('cogs/femida/config.json', 'w', encoding='utf-8') as f:
+            await f.write(json.dumps(self.config, indent=4, ensure_ascii=False))
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -178,6 +190,17 @@ class FemidaService(commands.Cog):
         ).set_thumbnail(url=interaction.user.display_avatar.url)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
+        log_channel = interaction.guild.get_channel(self.config['femida']['LOG_CHANNEL_ID'])
+        embed = discord.Embed(
+            title='— • Мут пользователя',
+            description=f'{member.mention} был замучен модератором {interaction.user.mention}\n'
+                        f'**Причина:** {reason}\n'
+                        f'**Будет размучен:** {timeout_finished}',
+            color=0x2F3136
+        )
+        embed.set_thumbnail(url=member.display_avatar.url)
+        await log_channel.send(embed=embed)
+
         try:
             message = (
                 f'Вы получили таймаут на сервере {interaction.guild}\nПричина: {reason}.\n'
@@ -240,6 +263,16 @@ class FemidaService(commands.Cog):
         ).set_thumbnail(url=interaction.user.display_avatar.url)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
+        log_channel = interaction.guild.get_channel(self.config['femida']['LOG_CHANNEL_ID'])
+        embed = discord.Embed(
+            title='— • Предупреждение пользователя',
+            description=f'{member.mention} получил предупреждение от модератора {interaction.user.mention}\n'
+                        f'**Причина:** {reason}\n'
+                        f'**Будет размучен:** {discord.utils.format_dt(finished_at, "R")}',
+            color=0x2F3136
+        )
+        await log_channel.send(embed=embed)
+
         try:
             message = (
                 f'Вы получили предупреждение на сервере {interaction.guild}\nПричина: {reason}.\n'
@@ -290,6 +323,16 @@ class FemidaService(commands.Cog):
             color=0x2F3136
         ).set_thumbnail(url=interaction.user.display_avatar.url)
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        log_channel = interaction.guild.get_channel(self.config['femida']['LOG_CHANNEL_ID'])
+        embed = discord.Embed(
+            title='— • Размут пользователя',
+            description=f'{member.mention} был размучен модератором {interaction.user.mention}\n'
+                        f'**Причина:** {reason}',
+            color=0x2F3136
+        )
+        embed.set_thumbnail(url=member.display_avatar.url)
+        await log_channel.send(embed=embed)
 
         try:
             message = (
