@@ -60,7 +60,7 @@ class Joiner(commands.Cog):
         if before.guild != self.bot.get_guild(DISCORD_GUILD):
             return
 
-        staff_channel = before.guild.get_channel(self.config['logs']['LOGS_STAFF_CHANNEL_ID'])
+        staff_channel = before.guild.get_channel(self.config['logs']['STAFF_CHANNEL_ID'])
         if after.guild.premium_subscriber_role in before.roles and \
                 after.guild.premium_subscriber_role not in after.roles:
             await staff_channel.send(
