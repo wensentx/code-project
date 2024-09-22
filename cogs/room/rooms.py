@@ -13,6 +13,7 @@ from cogs.room.database.functions import *
 load_dotenv()
 
 GUILD_ID = int(os.getenv('DISCORD_GUILD'))
+OWNER_ID = int(os.getenv('OWNER_ID'))
 
 
 async def is_owner(interaction, title) -> bool:
@@ -461,7 +462,7 @@ class RoomsView(discord.ui.View):
         self.bot = bot
         super().__init__(timeout=None)
 
-    @discord.ui.button(emoji="<:hide:1245465909301346477>", custom_id="pr_hide", row=0)
+    @discord.ui.button(emoji="<:c_hide:1287209082930987059>", custom_id="pr_hide", row=0)
     async def hide(self, interaction, _):
         if not await is_accept(interaction, "Скрыть комнату для всех"):
             return
@@ -487,14 +488,14 @@ class RoomsView(discord.ui.View):
             await channel.set_permissions(role, view_channel=True)
             await interaction.response.send_message(embed=embed_open, ephemeral=True)
 
-    @discord.ui.button(emoji="<:edit:1245465914061754398>", custom_id="pr_name", row=0)
+    @discord.ui.button(emoji="<:c_edit:1287209081257332847>", custom_id="pr_name", row=0)
     async def name(self, interaction, _):
         if not await is_accept(interaction, "Изменить название комнаты"):
             return
 
         await interaction.response.send_modal(EditRoomName(interaction.user.voice.channel))
 
-    @discord.ui.button(emoji="<:owner:1245465917878566982>", custom_id="pr_setowner", row=0)
+    @discord.ui.button(emoji="<:c_owner:1287209093823463546>", custom_id="pr_setowner", row=0)
     async def setowner(self, interaction, _):
         if not await is_accept(interaction, "Передать владение комнатой"):
             return
@@ -505,7 +506,7 @@ class RoomsView(discord.ui.View):
         embed.set_thumbnail(url=interaction.user.display_avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True, view=UserView('setowner'))
 
-    @discord.ui.button(emoji="<:kick:1245465922718662686>", custom_id="pr_kick", row=0)
+    @discord.ui.button(emoji="<:c_kick:1287209085447573574>", custom_id="pr_kick", row=0)
     async def kick(self, interaction, _):
         if not await is_accept(interaction, "Выгнать из комнаты"):
             return
@@ -518,7 +519,7 @@ class RoomsView(discord.ui.View):
             )).set_thumbnail(url=interaction.user.display_avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True, view=UserView('kick'))
 
-    @discord.ui.button(emoji="<:accept:1245465926363779219>", custom_id="pr_accept", row=0)
+    @discord.ui.button(emoji="<:c_accept:1287209077293977641>", custom_id="pr_accept", row=0)
     async def accept(self, interaction, _):
         if not await is_accept(interaction, "Выдать доступ к комнате"):
             return
@@ -531,7 +532,7 @@ class RoomsView(discord.ui.View):
             )).set_thumbnail(url=interaction.user.display_avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True, view=UserView('accept'))
 
-    @discord.ui.button(emoji="<:reject:1245465933875515432>", custom_id="pr_deny", row=1)
+    @discord.ui.button(emoji="<:c_deny:1287209079386669198>", custom_id="pr_deny", row=1)
     async def deny(self, interaction, _):
         if not await is_accept(interaction, "Запретить доступ к комнате"):
             return
@@ -544,7 +545,7 @@ class RoomsView(discord.ui.View):
             )).set_thumbnail(url=interaction.user.display_avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True, view=UserView('deny'))
 
-    @discord.ui.button(emoji="<:unmute:1245465940636864573>", custom_id="pr_unmute", row=1)
+    @discord.ui.button(emoji="<:c_unmute:1287209096021545070>", custom_id="pr_unmute", row=1)
     async def unmute(self, interaction, _):
         if not await is_accept(interaction, "Выдать право говорить"):
             return
@@ -557,7 +558,7 @@ class RoomsView(discord.ui.View):
             )).set_thumbnail(url=interaction.user.display_avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True, view=UserView('unmute'))
 
-    @discord.ui.button(emoji="<:mute:1245465947691683923>", custom_id="pr_mute", row=1)
+    @discord.ui.button(emoji="<:c_mute:1287209091395223663>", custom_id="pr_mute", row=1)
     async def mute(self, interaction, _):
         if not await is_accept(interaction, "Забрать право говорить"):
             return
@@ -570,14 +571,14 @@ class RoomsView(discord.ui.View):
             )).set_thumbnail(url=interaction.user.display_avatar)
         await interaction.response.send_message(embed=embed, ephemeral=True, view=UserView('mute'))
 
-    @discord.ui.button(emoji="<:limit:1245465954817806336>", custom_id="pr_limit")
+    @discord.ui.button(emoji="<:c_limit:1287209087066574859>", custom_id="pr_limit")
     async def limit(self, interaction, _):
         if not await is_accept(interaction, "Изменить лимит пользователей"):
             return
 
         await interaction.response.send_modal(EditRoomLimit(interaction.user.voice.channel))
 
-    @discord.ui.button(emoji="<:close:1245465959888850954>", custom_id="pr_close")
+    @discord.ui.button(emoji="<:c_lock:1287209088987697172>", custom_id="pr_close")
     async def close(self, interaction, _):
         if not await is_accept(interaction, "Открыть/Закрыть комнату для всех"):
             return
@@ -629,6 +630,9 @@ class Rooms(commands.Cog):
 
     @commands.command()
     async def create_voice(self, ctx):
+        if ctx.author.id != OWNER_ID:
+            return
+
         embed = discord.Embed(
             title="Управление приватной комнатой", color=0x2F3136,
             description=(
@@ -636,17 +640,17 @@ class Rooms(commands.Cog):
                 "Использовать их можно только когда у тебя есть приватный канал."
             )
         )
-        embed.add_field(name="_ _", value="<:hide:1245465909301346477> — Отобразить/скрыть комнату\n"
-                                          "<:edit:1245465914061754398> — Изменить название комнаты\n"
-                                          "<:owner:1245465917878566982> — Передать владение комнатой\n"
-                                          "<:kick:1245465922718662686> — Выгнать из комнаты\n"
-                                          "<:accept:1245465926363779219> — Выдать доступ в комнату",
+        embed.add_field(name="_ _", value="<:c_hide:1287209082930987059> — Отобразить/скрыть комнату\n"
+                                          "<:c_edit:1287209081257332847> — Изменить название комнаты\n"
+                                          "<:c_owner:1287209093823463546> — Передать владение комнатой\n"
+                                          "<:c_kick:1287209085447573574> — Выгнать из комнаты\n"
+                                          "<:c_accept:1287209077293977641> — Выдать доступ в комнату",
                         inline=True)
-        embed.add_field(name="_ _", value="<:reject:1245465933875515432> — Забрать доступ в комнату\n"
-                                          "<:unmute:1245465940636864573> — Выдать право говорить\n"
-                                          "<:mute:1245465947691683923> — Забрать право говорить\n"
-                                          "<:limit:1245465954817806336> — Изменить лимит пользователей\n"
-                                          "<:close:1245465959888850954> — Открыть/закрыть комнату",
+        embed.add_field(name="_ _", value="<:c_deny:1287209079386669198> — Забрать доступ в комнату\n"
+                                          "<:c_unmute:1287209096021545070> — Выдать право говорить\n"
+                                          "<:c_mute:1287209091395223663> — Забрать право говорить\n"
+                                          "<:c_limit:1287209087066574859> — Изменить лимит пользователей\n"
+                                          "<:c_lock:1287209088987697172> — Открыть/закрыть комнату",
                         inline=True)
         await ctx.send(embed=embed, view=RoomsView(self.bot))
 
