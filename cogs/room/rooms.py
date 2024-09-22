@@ -658,7 +658,7 @@ class Rooms(commands.Cog):
     async def on_voice_state_update(self, member, before, after):
         channels_data = await ChannelFunc().get_channels()
         channels = [channel.channel_id for channel in channels_data]
-        if after.channel and after.channel.id == self.config['rooms']['create_channel']:
+        if after.channel and after.channel.id == self.config['rooms']['CREATE_CHANNEL_ID']:
             current = datetime.datetime.now()
             logs = await LogFunc().get_log_by_user(member.id, "CREATE_ROOM")
             if logs is not None:
@@ -686,7 +686,7 @@ class Rooms(commands.Cog):
             else:
                 name = settings.title
                 limit = settings.limit
-            category = self.bot.get_channel(self.config['rooms']['category_id'])
+            category = self.bot.get_channel(self.config['rooms']['CATEGORY_ID'])
             channel2 = await member.guild.create_voice_channel(name, category=category)
             await member.move_to(channel2)
             overwrites = {
@@ -731,7 +731,7 @@ class Rooms(commands.Cog):
             return
 
         view_server = RoomsView(self.bot)
-        self.bot.add_view(view_server, message_id=self.config['rooms']['message_id'])
+        self.bot.add_view(view_server, message_id=self.config['rooms']['MESSAGE_ID'])
         self.persistent_views_added = True
         self.check_current_voice.start()
 
