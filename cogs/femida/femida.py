@@ -132,8 +132,7 @@ class FemidaService(commands.Cog):
                 color=0x2F3136
             ).set_thumbnail(url=interaction.user.display_avatar.url)
             return await interaction.response.send_message(embed=embed, ephemeral=True)
-
-        if member.timed_out_until is not None:
+        if member.is_timed_out():
             timeout_finished = discord.utils.format_dt(member.timed_out_until, 'R')
             embed = discord.Embed(
                 title="— • Мут пользователя",
