@@ -132,6 +132,7 @@ class FemidaService(commands.Cog):
                 color=0x2F3136
             ).set_thumbnail(url=interaction.user.display_avatar.url)
             return await interaction.response.send_message(embed=embed, ephemeral=True)
+
         if member.is_timed_out():
             timeout_finished = discord.utils.format_dt(member.timed_out_until, 'R')
             embed = discord.Embed(
@@ -238,6 +239,18 @@ class FemidaService(commands.Cog):
             embed = discord.Embed(
                 title="— • Предупреждение пользователя",
                 description=f"{interaction.user.mention}, вы не можете выдать предупреждение боту.",
+                color=0x2F3136
+            ).set_thumbnail(url=interaction.user.display_avatar.url)
+            return await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        if member.is_timed_out():
+            timeout_finished = discord.utils.format_dt(member.timed_out_until, 'R')
+            embed = discord.Embed(
+                title="— • Мут пользователя",
+                description=(
+                    f"{interaction.user.mention}, указанный пользователь ({member.mention}) уже имеет наказание."
+                    f" Его наказание закончится {timeout_finished}"
+                ),
                 color=0x2F3136
             ).set_thumbnail(url=interaction.user.display_avatar.url)
             return await interaction.response.send_message(embed=embed, ephemeral=True)
